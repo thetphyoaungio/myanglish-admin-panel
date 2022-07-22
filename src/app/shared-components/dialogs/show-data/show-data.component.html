@@ -1,0 +1,31 @@
+<div class="dialog-container">
+    <nb-card status="info">
+        <nb-card-header>
+            {{title}}
+        </nb-card-header>
+
+        <nb-card-body>
+            <div *ngIf="data.length>0">
+                <div class="d-flex justify-content-between flex-wrap" *ngFor="let obj$ of data">
+                    <div class="p-2" *ngFor="let key of keys">
+                        <label class="form-label">{{key | titlecase}}</label>
+                        <p style="text-align: center;">{{obj$[key]}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="!(data.length>0)">
+                <div class="d-flex justify-content-between flex-wrap">
+                    <div class="p-2" *ngFor="let key of keys">
+                        <label class="form-label">{{key | titlecase}}</label>
+                        <p style="text-align: center;">{{data[key]}}</p>
+                    </div>
+                </div>
+            </div>
+        </nb-card-body>
+
+        <nb-card-footer>
+            <button nbButton status="primary" (click)="ok()">OK</button>
+        </nb-card-footer>
+    </nb-card>
+</div>

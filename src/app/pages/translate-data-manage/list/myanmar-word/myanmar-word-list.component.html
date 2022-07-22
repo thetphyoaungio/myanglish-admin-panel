@@ -1,0 +1,12 @@
+<button 
+nbButton status="primary" 
+(click)="createNew()" 
+class="create-new-btn">Create New</button>
+
+<ngx-smart-table 
+*ngIf="myanmarWords" 
+[columnSetting]="column_setting" 
+[data]="myanmarWords" 
+[title]="'Myanmar Words'"
+[isRefresh]="true">
+</ngx-smart-table>

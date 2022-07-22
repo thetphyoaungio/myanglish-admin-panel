@@ -1,0 +1,81 @@
+<nb-card>
+    <nb-card-body>
+      
+        <h1 id="title" class="title">Login</h1>
+        <p class="sub-title-1">Hello! Log in with your login-name.</p>
+
+        <form (ngSubmit)="login(userForm.value)" [formGroup]="userForm" aria-labelledby="title" style="text-align: left;">
+
+            <div class="form-control-group">
+                <label class="label" for="input-name">Name:</label>
+                <input 
+                nbInput 
+                fullWidth 
+                formControlName="name" 
+                name="name" 
+                type="text" 
+                id="input-name" 
+                placeholder="Login name..."
+                fieldSize="large"
+                autofocus
+                [status]="userForm.get('name').dirty ? (userForm.get('name').invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [attr.aria-invalid]="userForm.get('name').invalid && userForm.get('name').touched ? true : null"  
+                >
+                
+                <ng-container *ngIf="!userForm.get('name').valid && userForm.get('name').touched">
+                    <p class="caption status-danger" *ngIf="userForm.get('name').errors?.required">
+                        Login Name is required!
+                    </p>
+                </ng-container>
+            </div>
+
+            <div class="form-control-group">
+                <span class="label-with-link">
+                    <label class="label" for="input-password">Password:</label>
+                    <a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>
+                </span>
+                <input nbInput
+                fullWidth
+                formControlName="password" 
+                name="password"
+                type="password"
+                id="input-password"
+                placeholder="Password"
+                fieldSize="large"
+                [status]="userForm.get('password').dirty ? (userForm.get('password').invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [minlength]="6"
+                [maxlength]="20"
+                [attr.aria-invalid]="userForm.get('password').invalid && userForm.get('password').touched ? true : null"
+                >
+                <ng-container *ngIf="userForm.get('password').invalid && userForm.get('password').touched ">
+                    <p class="caption status-danger" *ngIf="userForm.get('password').errors?.required">
+                        Password is required!
+                    </p>
+                    <p class="caption status-danger" *ngIf="userForm.get('password').errors?.minlength || userForm.get('password').errors?.maxlength">
+                        Password should contain
+                        from 6
+                        to 8
+                        characters
+                    </p>
+                </ng-container>
+            </div>
+
+            <div style="text-align: center;">
+                <button nbButton
+                    fullWidth
+                    status="primary"
+                    size="large"
+                    [disabled]="submitted || !userForm.valid"
+                    [class.btn-pulse]="submitted" style="margin-bottom: 32px;max-width: 100px;">
+                Log In
+            </button>
+            </div>
+        </form>
+
+        <section class="another-action" aria-label="Register">
+            Don't have an account? <a class="text-link" routerLink="../register">Register</a>
+        </section>
+    </nb-card-body>
+</nb-card>

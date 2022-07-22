@@ -1,0 +1,120 @@
+<nb-card>
+    <nb-card-body>
+      
+        <h1 id="title" class="title">Register</h1>
+        <p class="sub-title-1">Hello! Register with your info.</p>
+
+        <nb-alert *ngIf="formInputErrMsgService.showMessages.error && formInputErrMsgService.errors?.length && !submitted" outline="danger" role="alert">
+            <p class="alert-title"><b>Oh snap!</b></p>
+            <ul class="alert-message-list">
+                <li *ngFor="let error of formInputErrMsgService.errors" class="alert-message">{{ error }}</li>
+            </ul>
+        </nb-alert>
+
+        <nb-alert *ngIf="formInputErrMsgService.showMessages.success && formInputErrMsgService.messages?.length && !submitted" outline="success" role="alert">
+            <p class="alert-title"><b>Hooray!</b></p>
+            <ul class="alert-message-list">
+                <li *ngFor="let message of formInputErrMsgService.messages" class="alert-message">{{ message }}</li>
+            </ul>
+        </nb-alert>
+
+        <form (ngSubmit)="register(regitForm.value)" [formGroup]="regitForm" aria-labelledby="title" style="text-align: left;">
+
+            <div class="form-control-group">
+                <label class="label" for="input-fullname">Full Name:</label>
+                <input 
+                nbInput 
+                fullWidth 
+                formControlName="fullname" 
+                name="fullname" 
+                type="text" 
+                id="input-fullname" 
+                placeholder="Full name..." 
+                fieldSize="large"
+                autofocus
+                [status]="regitForm.get('fullname').dirty ? (regitForm.get('fullname').invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [attr.aria-invalid]="regitForm.get('fullname').invalid && regitForm.get('fullname').touched ? true : null"  
+                >
+                <ng-container *ngIf="!regitForm.get('fullname').valid && regitForm.get('fullname').touched">
+                    <p class="caption status-danger" *ngIf="regitForm.get('fullname').errors?.required">
+                        Full name is required!
+                    </p>
+                </ng-container>
+            </div>
+
+            <div class="form-control-group">
+                <label class="label" for="input-email">Email:</label>
+                <input 
+                nbInput 
+                fullWidth 
+                formControlName="email" 
+                name="email" 
+                type="text" 
+                id="input-email" 
+                placeholder="Email address"
+                pattern=".+@.+\..+"
+                fieldSize="large" 
+                [status]="regitForm.get('email').dirty ? (regitForm.get('email').invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [attr.aria-invalid]="regitForm.get('email').invalid && regitForm.get('email').touched ? true : null"  
+                >
+                <ng-container *ngIf="!regitForm.get('email').valid && regitForm.get('email').touched">
+                    <p class="caption status-danger" *ngIf="regitForm.get('email').errors?.required">
+                        Email is required!
+                    </p>
+                    <p class="caption status-danger" *ngIf="regitForm.get('email').errors?.pattern">
+                        Email should be the real one!
+                    </p>
+                </ng-container>
+            </div>
+
+            <div class="form-control-group">
+                <span class="label-with-link">
+                    <label class="label" for="input-password">Password:</label>
+                </span>
+                <input nbInput
+                fullWidth
+                formControlName="password" 
+                name="password"
+                type="password"
+                id="input-password"
+                placeholder="Password"
+                fieldSize="large"
+                [status]="regitForm.get('password').dirty ? (regitForm.get('password').invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="true"
+                [minlength]="6"
+                [maxlength]="20"
+                [attr.aria-invalid]="regitForm.get('password').invalid && regitForm.get('password').touched ? true : null"
+                >
+                <ng-container *ngIf="regitForm.get('password').invalid && regitForm.get('password').touched ">
+                    <p class="caption status-danger" *ngIf="regitForm.get('password').errors?.required">
+                        Password is required!
+                    </p>
+                    <p class="caption status-danger" *ngIf="regitForm.get('password').errors?.minlength || regitForm.get('password').errors?.maxlength">
+                        Password should contain
+                        from 6
+                        to 8
+                        characters
+                    </p>
+                </ng-container>
+            </div>
+
+            <div style="text-align: center;">
+                <button nbButton
+                    fullWidth
+                    status="primary"
+                    size="large"
+                    [disabled]="submitted || !regitForm.valid"
+                    [class.btn-pulse]="submitted" style="margin-bottom: 32px;max-width: 100px;">
+                Register
+            </button>
+            </div>
+        </form>
+
+        <section class="another-action" aria-label="Register">
+            <a class="text-link" routerLink="../login">Back to Login</a>
+        </section>
+        
+    </nb-card-body>
+</nb-card>

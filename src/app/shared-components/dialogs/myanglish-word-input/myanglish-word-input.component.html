@@ -1,0 +1,58 @@
+<div class="dialog-container">
+    <nb-card status="info">
+        <nb-card-header>
+            Input Myanglish Word
+        </nb-card-header>
+
+        <nb-card-body>
+            <form [formGroup]="inputForm" aria-labelledby="title">
+                <div class="form-control-group">
+                    <label>Myanglish Word : </label>
+                    <input 
+                    nbInput 
+                    type="text"
+                    fullWidth 
+                    formControlName="wordmyanglish"
+                    name="wordmyanglish" 
+                    id="dialog-input-wordmyanglish" 
+                    placeholder="Enter Myanglish..."
+                    fieldSize="large"
+                    autofocus 
+                    [status]="inputForm.get('wordmyanglish').dirty ? (inputForm.get('wordmyanglish').invalid  ? 'danger' : 'success') : 'basic'"
+                    minlength="1"
+                    [attr.aria-invalid]="inputForm.get('wordmyanglish').invalid && inputForm.get('wordmyanglish').touched ? true : null">
+                    <ng-container *ngIf="!inputForm.get('wordmyanglish').valid && inputForm.get('wordmyanglish').touched">
+                        <p class="caption status-danger" *ngIf="inputForm.get('wordmyanglish').errors?.minlength">
+                            Text should contain atleast 1(one) characters
+                        </p>
+                        <p class="caption status-danger" *ngIf="inputForm.get('wordmyanglish').errors?.required">
+                            Myanglish word is required!
+                        </p>
+                    </ng-container>
+                </div>
+            </form>
+            
+        </nb-card-body>
+
+        <nb-card-footer>
+            <button nbButton (click)="cancel()">Cancel</button>
+
+            <ng-container *ngIf="!submitted && inputForm.valid">
+                <button 
+                nbButton 
+                status="primary" 
+                [class.btn-pulse]="submitted" 
+                (click)="add(inputForm.value)">Add</button>
+            </ng-container>
+    
+            <ng-container *ngIf="submitted || !inputForm.valid">
+                <button 
+                nbButton 
+                status="primary" 
+                disabled
+                [class.btn-pulse]="submitted">Add</button>
+            </ng-container>
+            
+        </nb-card-footer>
+    </nb-card>
+</div>

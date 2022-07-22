@@ -1,0 +1,505 @@
+<nb-card *ngIf="detail">
+    <nb-card-header>
+        {{title}}
+    </nb-card-header>
+
+    <nb-card-body>
+        <ng-container *ngIf="processTarget==='detail'">
+            <ng-container *ngIf="componentTarget==='myanglish'">
+                <!-- myanglish -->
+                <div class="info-section">
+                    <label class="sub-title-1">Myanglish Word</label>
+                    <div>
+                        <label>{{detail.wordmyanglish}}</label>
+                    </div>
+                </div>
+        
+                <!-- myanmar(s) -->
+                <div class="info-section">
+                    <label class="sub-title-1">Myanmar Word(s)</label>
+                    <div *ngFor="let item of detail.myanmar; let idx=index;">
+                        <fieldset>
+                            <legend style="padding:0 8px;">({{idx + 1}})</legend>
+                            <label>Unicode : {{item.wordunicode}}</label> 
+                            <div>
+                                <label><span style="margin-right:2px">Zawgyi</span>&nbsp;&nbsp; : {{item.wordzawgyi}}</label> 
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="componentTarget==='myanmar'">
+                <!-- myanmar -->
+                <div class="info-section">
+                    <label class="sub-title-1">Myanmar Word</label>
+                    <div>
+                        <label class="sub-title-2" style="color:white;">Unicode</label> : 
+                        <label>{{detail.wordunicode}}</label>
+                    </div>
+                    <div>
+                        <label class="sub-title-2" style="color:white;width:42.34px;">Zawgyi</label> : 
+                        <label>{{detail.wordzawgyi}}</label>
+                    </div>
+                </div>
+        
+                <!-- myanglish(s) -->
+                <div class="info-section">
+                    <label class="sub-title-1">Myanglish Word(s)</label>
+                    <div *ngFor="let item of detail.myanglish; let idx=index;">
+                        <fieldset>
+                            <legend style="padding:0 8px;">({{idx + 1}})</legend>
+
+                            <label class="sub-title-2" style="color: white;">Myanglish</label> : {{item.wordmyanglish}}
+                        </fieldset>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        
+        <ng-container *ngIf="processTarget==='edit'">
+            <ng-container *ngIf="componentTarget==='myanglish'">
+                <form [formGroup]="editForm" aria-labelledby="title" (keydown)="handleKeyupEnter($event)">
+
+                    <div class="form-control-group">
+                        <label class="label tdm-form-label" for="input-name">Myanglish Word:</label>
+                        <input 
+                        nbInput 
+                        fullWidth 
+                        formControlName="myanglish" 
+                        name="myanglish" 
+                        type="text" 
+                        id="input-myanglish" 
+                        placeholder="Enter myanglish..."
+                        fieldSize="large"
+                        autofocus
+                        [status]="editForm.get('myanglish').dirty ? (editForm.get('myanglish').invalid  ? 'danger' : 'success') : 'basic'"
+                        minlength="1"
+                        [attr.aria-invalid]="editForm.get('myanglish').invalid && editForm.get('myanglish').touched ? true : null"  
+                        (keyup)="onKeyup($event)">
+                        <ng-container *ngIf="!editForm.get('myanglish').valid && editForm.get('myanglish').touched">
+                            <p class="caption status-danger" *ngIf="editForm.get('myanglish').errors?.minlength">
+                                Text should contain atleast 1(one) characters
+                            </p>
+                            <p class="caption status-danger" *ngIf="editForm.get('myanglish').errors?.required">
+                                Myanglish word is required!
+                            </p>
+                        </ng-container>
+
+                        <ng-container *ngIf="!submitted && editForm.valid">
+                            <button 
+                            nbButton 
+                            status="primary" 
+                            [class.btn-pulse]="submitted"
+                            (click)="onUpdateMyanglishWordOnly(editForm.value)"
+                            style="margin-top: 7px;">Update Myanglish Word</button>
+                        </ng-container>
+                
+                        <ng-container *ngIf="submitted || !editForm.valid">
+                            <button 
+                            nbButton 
+                            status="primary" 
+                            disabled
+                            [class.btn-pulse]="submitted"
+                            style="margin-top: 7px;">Update Myanglish Word</button>
+                        </ng-container>
+                    </div>
+    
+                    <div class="form-control-group">
+                        <label class="label tdm-form-label" for="input-name">Myanmar Word(s):</label>
+    
+                        <ng-container *ngIf="!submitted && editForm.valid">
+                            <button 
+                            nbButton 
+                            size="small" 
+                            status="success" 
+                            style="margin-left: 5px;"
+                            (click)="addNewMyanmarWordByDialog()">Add New</button>
+                        </ng-container>
+    
+                        <ng-container *ngIf="submitted || !editForm.valid">
+                            <button 
+                            nbButton 
+                            size="small" 
+                            status="success" 
+                            disabled
+                            style="margin-left: 5px;">Add New</button>
+                        </ng-container>
+                        
+                        <div formArrayName="myanmar">
+                            <div class="form-array-group-container" *ngFor="let myan of myanmar.controls; let idx=index;">
+                                
+                                <div [formGroupName]="idx">
+                                    <fieldset>
+                                        <legend style="padding:0 8px;">( {{idx + 1}} )</legend>
+    
+                                        <div class="form-array-controls-container">
+                                            <label>Unicode : </label>
+                                            <input 
+                                            nbInput 
+                                            fullWidth 
+                                            formControlName="wordunicode" 
+                                            name="wordunicode" 
+                                            type="text" 
+                                            id="input-wordunicode" 
+                                            placeholder="Enter unicode..."
+                                            fieldSize="large"
+                                            autofocus 
+                                            [status]="myanmar.controls[idx].get('wordunicode').dirty ? (myanmar.controls[idx].get('wordunicode').invalid  ? 'danger' : 'success') : 'basic'"
+                                            minlength="1"
+                                            [attr.aria-invalid]="myanmar.controls[idx].get('wordunicode').invalid && myanmar.controls[idx].get('wordunicode').touched ? true : null">
+                                            <ng-container *ngIf="!myanmar.controls[idx].get('wordunicode').valid && myanmar.controls[idx].get('wordunicode').touched">
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordunicode').errors?.minlength">
+                                                    Text should contain atleast 1(one) characters
+                                                </p>
+    
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordunicode').errors?.required">
+                                                    Myanmar word (Unicode) is required!
+                                                </p>
+                                            </ng-container>
+                                            
+                                        </div>
+        
+                                        <div class="form-array-controls-container">
+                                            <label>Zawgyi : </label>
+                                            <input 
+                                            nbInput 
+                                            fullWidth 
+                                            formControlName="wordzawgyi" 
+                                            name="wordzawgyi" 
+                                            type="text" 
+                                            id="input-wordzawgyi" 
+                                            placeholder="Enter zawgyi..."
+                                            fieldSize="large"
+                                            autofocus 
+                                            [status]="myanmar.controls[idx].get('wordzawgyi').dirty ? (myanmar.controls[idx].get('wordzawgyi').invalid  ? 'danger' : 'success') : 'basic'"
+                                            minlength="1"
+                                            [attr.aria-invalid]="myanmar.controls[idx].get('wordzawgyi').invalid && myanmar.controls[idx].get('wordzawgyi').touched ? true : null">
+                                            <ng-container *ngIf="!myanmar.controls[idx].get('wordzawgyi').valid && myanmar.controls[idx].get('wordzawgyi').touched">
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordzawgyi').errors?.minlength">
+                                                    Text should contain atleast 1(one) characters
+                                                </p>
+    
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordzawgyi').errors?.required">
+                                                    Myanmar word (Zawgyi) is required!
+                                                </p>
+                                            </ng-container>
+                                        </div>
+        
+                                        <ng-container *ngIf="myanmar.controls[idx].get('isDetailData').value">
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="danger" 
+                                            class="multi-result-btn"
+                                            (click)="deleteMyanmarWord(idx, myanmar.controls[idx])">Delete</button>
+
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="info" 
+                                            class="multi-result-btn"
+                                            (click)="updateMyanmarWord(idx, myanmar.controls[idx])">Update</button>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="!myanmar.controls[idx].get('isDetailData').value">
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="danger" 
+                                            class="multi-result-btn"
+                                            (click)="removeMyanmarWord(idx)">Remove</button>
+                                            
+                                            <ng-container 
+                                            *ngIf="myanmar.controls[idx].get('wordzawgyi').valid || myanmar.controls[idx].get('wordunicode').valid">
+                                                <button 
+                                                nbButton 
+                                                size="small" 
+                                                status="info" 
+                                                class="multi-result-btn" 
+                                                (click)="saveMyanmarWord(myanmar.controls[idx])">Save</button>
+                                            </ng-container>
+
+                                            <ng-container 
+                                            *ngIf="myanmar.controls[idx].get('wordzawgyi').invalid || myanmar.controls[idx].get('wordunicode').invalid">
+                                                <button 
+                                                nbButton 
+                                                size="small" 
+                                                status="info" 
+                                                class="multi-result-btn" 
+                                                disabled>Save</button>
+                                            </ng-container>
+                                            
+                                        </ng-container>
+                                        
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </form>
+            </ng-container>
+
+            <ng-container *ngIf="componentTarget==='myanmar'">
+
+                <form [formGroup]="editForm" aria-labelledby="title" (keydown)="handleKeyupEnter($event)">
+                    
+                    <div class="form-control-group">
+                        <label class="label tdm-form-label" for="input-name">Myanmar Word:</label>
+
+                        <div formArrayName="myanmar">
+                            <div class="form-array-group-container" *ngFor="let myan of myanmar.controls; let idx=index;">
+                                
+                                <div [formGroupName]="idx">
+                                    <fieldset>
+                                        <legend></legend>
+    
+                                        <div class="form-array-controls-container">
+                                            <label>Unicode : </label>
+                                            <input 
+                                            nbInput 
+                                            fullWidth 
+                                            formControlName="wordunicode" 
+                                            name="wordunicode" 
+                                            type="text" 
+                                            id="input-wordunicode" 
+                                            placeholder="Enter unicode..."
+                                            fieldSize="large"
+                                            autofocus 
+                                            [status]="myanmar.controls[idx].get('wordunicode').dirty ? (myanmar.controls[idx].get('wordunicode').invalid  ? 'danger' : 'success') : 'basic'"
+                                            minlength="1"
+                                            [attr.aria-invalid]="myanmar.controls[idx].get('wordunicode').invalid && myanmar.controls[idx].get('wordunicode').touched ? true : null">
+                                            <ng-container *ngIf="!myanmar.controls[idx].get('wordunicode').valid && myanmar.controls[idx].get('wordunicode').touched">
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordunicode').errors?.minlength">
+                                                    Text should contain atleast 1(one) characters
+                                                </p>
+    
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordunicode').errors?.required">
+                                                    Myanmar word (Unicode) is required!
+                                                </p>
+                                            </ng-container>
+                                            
+                                        </div>
+        
+                                        <div class="form-array-controls-container">
+                                            <label>Zawgyi : </label>
+                                            <input 
+                                            nbInput 
+                                            fullWidth 
+                                            formControlName="wordzawgyi" 
+                                            name="wordzawgyi" 
+                                            type="text" 
+                                            id="input-wordzawgyi" 
+                                            placeholder="Enter zawgyi..."
+                                            fieldSize="large"
+                                            autofocus 
+                                            [status]="myanmar.controls[idx].get('wordzawgyi').dirty ? (myanmar.controls[idx].get('wordzawgyi').invalid  ? 'danger' : 'success') : 'basic'"
+                                            minlength="1"
+                                            [attr.aria-invalid]="myanmar.controls[idx].get('wordzawgyi').invalid && myanmar.controls[idx].get('wordzawgyi').touched ? true : null">
+                                            <ng-container *ngIf="!myanmar.controls[idx].get('wordzawgyi').valid && myanmar.controls[idx].get('wordzawgyi').touched">
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordzawgyi').errors?.minlength">
+                                                    Text should contain atleast 1(one) characters
+                                                </p>
+    
+                                                <p class="caption status-danger" *ngIf="myanmar.controls[idx].get('wordzawgyi').errors?.required">
+                                                    Myanmar word (Zawgyi) is required!
+                                                </p>
+                                            </ng-container>
+                                        </div>
+        
+                                        <!-- <ng-container *ngIf="myanmar.controls[idx].get('isDetailData').value">
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="danger" 
+                                            class="multi-result-btn"
+                                            (click)="deleteMyanmarWord(idx, myanmar.controls[idx])">Delete</button>
+
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="info"
+                                            class="multi-result-btn"
+                                            (click)="updateMyanmarWord(idx, myanmar.controls[idx])">Update</button>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="!myanmar.controls[idx].get('isDetailData').value">
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="danger" 
+                                            class="multi-result-btn"
+                                            (click)="removeMyanmarWord(idx)">Remove</button>
+                                            
+                                            <ng-container 
+                                            *ngIf="myanmar.controls[idx].get('wordzawgyi').valid || myanmar.controls[idx].get('wordunicode').valid">
+                                                <button 
+                                                nbButton 
+                                                size="small" 
+                                                status="info" 
+                                                class="multi-result-btn" 
+                                                (click)="saveMyanmarWord(myanmar.controls[idx])">Save</button>
+                                            </ng-container>
+
+                                            <ng-container 
+                                            *ngIf="myanmar.controls[idx].get('wordzawgyi').invalid || myanmar.controls[idx].get('wordunicode').invalid">
+                                                <button 
+                                                nbButton 
+                                                size="small" 
+                                                status="info" 
+                                                class="multi-result-btn" 
+                                                disabled>Save</button>
+                                            </ng-container>
+                                            
+                                        </ng-container> -->
+                                        
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="!submitted && editForm.valid">
+                            <button 
+                            nbButton 
+                            status="primary" 
+                            [class.btn-pulse]="submitted"
+                            (click)="onUpdateMyanmarWordOnly(editForm.value)"
+                            style="margin-top: 7px;">Update Myanmar Word</button>
+                        </ng-container>
+                
+                        <ng-container *ngIf="submitted || !editForm.valid">
+                            <button 
+                            nbButton 
+                            status="primary" 
+                            disabled
+                            [class.btn-pulse]="submitted"
+                            style="margin-top: 7px;">Update Myanmar Word</button>
+                        </ng-container>
+                    </div>
+    
+                    <div class="form-control-group">
+                        <label class="label tdm-form-label" for="input-name">Myanglish Word(s):</label>
+    
+                        <ng-container *ngIf="!submitted && editForm.valid">
+                            <button 
+                            nbButton 
+                            size="small" 
+                            status="success" 
+                            style="margin-left: 5px;"
+                            (click)="addNewMyanglishWordByDialog()">Add New</button>
+                        </ng-container>
+    
+                        <ng-container *ngIf="submitted || !editForm.valid">
+                            <button 
+                            nbButton 
+                            size="small" 
+                            status="success" 
+                            disabled
+                            style="margin-left: 5px;">Add New</button>
+                        </ng-container>
+                        
+                        <div formArrayName="myanglish">
+                            <div class="form-array-group-container" *ngFor="let myan of myanglish.controls; let idx=index;">
+                                
+                                <div [formGroupName]="idx">
+                                    <fieldset>
+                                        <legend style="padding:0 8px;">( {{idx + 1}} )</legend>
+    
+                                        <div class="form-array-controls-container">
+                                            <label>Myanglish : </label>
+                                            <input 
+                                            nbInput 
+                                            fullWidth 
+                                            formControlName="wordmyanglish" 
+                                            name="wordmyanglish" 
+                                            type="text" 
+                                            id="input-wordmyanglish" 
+                                            placeholder="Enter myanglish..."
+                                            fieldSize="large"
+                                            autofocus 
+                                            [status]="myanglish.controls[idx].get('wordmyanglish').dirty ? (myanglish.controls[idx].get('wordmyanglish').invalid  ? 'danger' : 'success') : 'basic'"
+                                            minlength="1"
+                                            [attr.aria-invalid]="myanglish.controls[idx].get('wordmyanglish').invalid && myanglish.controls[idx].get('wordmyanglish').touched ? true : null">
+                                            <ng-container *ngIf="!myanglish.controls[idx].get('wordmyanglish').valid && myanglish.controls[idx].get('wordmyanglish').touched">
+                                                <p class="caption status-danger" *ngIf="myanglish.controls[idx].get('wordmyanglish').errors?.minlength">
+                                                    Text should contain atleast 1(one) characters
+                                                </p>
+    
+                                                <p class="caption status-danger" *ngIf="myanglish.controls[idx].get('wordmyanglish').errors?.required">
+                                                    Myanglish word is required!
+                                                </p>
+                                            </ng-container>
+                                            
+                                        </div>
+        
+                                        <ng-container *ngIf="myanglish.controls[idx].get('isDetailData').value">
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="danger" 
+                                            class="multi-result-btn"
+                                            (click)="deleteMyanglishWord(idx, myanglish.controls[idx])">Delete</button>
+
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="info" 
+                                            class="multi-result-btn"
+                                            (click)="updateMyanglishWord(idx, myanglish.controls[idx])">Update</button>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="!myanglish.controls[idx].get('isDetailData').value">
+                                            <button 
+                                            nbButton 
+                                            size="small" 
+                                            status="danger" 
+                                            class="multi-result-btn"
+                                            (click)="removeMyanglishWord(idx)">Remove</button>
+                                            
+                                            <ng-container 
+                                            *ngIf="myanglish.controls[idx].get('wordmyanglish').valid">
+                                                <button 
+                                                nbButton 
+                                                size="small" 
+                                                status="info" 
+                                                class="multi-result-btn" 
+                                                (click)="saveMyanglishWord(myanglish.controls[idx])">Save</button>
+                                            </ng-container>
+
+                                            <ng-container 
+                                            *ngIf="myanglish.controls[idx].get('wordmyanglish').invalid">
+                                                <button 
+                                                nbButton 
+                                                size="small" 
+                                                status="info" 
+                                                class="multi-result-btn" 
+                                                disabled>Save</button>
+                                            </ng-container>
+                                            
+                                        </ng-container>
+                                        
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                </form>
+
+            </ng-container>
+        </ng-container>
+    </nb-card-body>
+
+    <nb-card-footer>
+        <ng-container *ngIf="processTarget==='detail'">
+            <button nbButton status="primary" (click)="gotoListWithNoNeedReload()">OK</button>
+        </ng-container>
+
+        <ng-container *ngIf="processTarget==='edit'">
+            <button nbButton status="default" (click)="gotoListWithNoNeedReload()">Cancel</button>
+        </ng-container>
+        
+    </nb-card-footer>
+</nb-card>
+                

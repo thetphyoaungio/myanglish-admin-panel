@@ -1,0 +1,87 @@
+<div class="dialog-container">
+    <nb-card status="info">
+        <nb-card-header>
+            <!-- {{title}} -->
+            Input Myanmar Word
+        </nb-card-header>
+
+        <nb-card-body>
+            <form [formGroup]="inputForm" aria-labelledby="title">
+                <div class="form-control-group">
+                    <label>Unicode : </label>
+                    <input 
+                    nbInput 
+                    type="text"
+                    fullWidth 
+                    formControlName="wordunicode"
+                    name="wordunicode" 
+                    id="dialog-input-wordunicode" 
+                    placeholder="Enter Unicode..."
+                    fieldSize="large"
+                    autofocus 
+                    [status]="inputForm.get('wordunicode').dirty ? (inputForm.get('wordunicode').invalid  ? 'danger' : 'success') : 'basic'"
+                    minlength="1"
+                    [attr.aria-invalid]="inputForm.get('wordunicode').invalid && inputForm.get('wordunicode').touched ? true : null"
+                    (keyup)="onKeyup($event,'uni')">
+                    <ng-container *ngIf="!inputForm.get('wordunicode').valid && inputForm.get('wordunicode').touched">
+                        <p class="caption status-danger" *ngIf="inputForm.get('wordunicode').errors?.minlength">
+                            Text should contain atleast 1(one) characters
+                        </p>
+                        <p class="caption status-danger" *ngIf="inputForm.get('wordunicode').errors?.required">
+                            Myanmar word(Unicode) is required!
+                        </p>
+                    </ng-container>
+                </div>
+
+                <div class="form-control-group">
+                    <label>Zawgyi : </label>
+                    <input 
+                    nbInput 
+                    type="text"
+                    fullWidth 
+                    formControlName="wordzawgyi"
+                    name="wordzawgyi" 
+                    id="dialog-input-wordzawgyi" 
+                    placeholder="Enter Zawgyi..."
+                    fieldSize="large"
+                    autofocus 
+                    [status]="inputForm.get('wordzawgyi').dirty ? (inputForm.get('wordzawgyi').invalid  ? 'danger' : 'success') : 'basic'"
+                    minlength="1"
+                    [attr.aria-invalid]="inputForm.get('wordzawgyi').invalid && inputForm.get('wordzawgyi').touched ? true : null" 
+                    (keyup)="onKeyup($event,'zgi')">
+                    <ng-container *ngIf="!inputForm.get('wordzawgyi').valid && inputForm.get('wordzawgyi').touched">
+                        <p class="caption status-danger" *ngIf="inputForm.get('wordzawgyi').errors?.minlength">
+                            Text should contain atleast 1(one) characters
+                        </p>
+                        <p class="caption status-danger" *ngIf="inputForm.get('wordzawgyi').errors?.required">
+                            Myanmar word(Zawgyi) is required!
+                        </p>
+                    </ng-container>
+                </div>
+
+            </form>
+            
+        </nb-card-body>
+
+        <nb-card-footer>
+            <button nbButton (click)="cancel()">Cancel</button>
+
+            <ng-container *ngIf="!submitted && inputForm.valid">
+                <button 
+                nbButton 
+                status="primary" 
+                [class.btn-pulse]="submitted" 
+                (click)="add(inputForm.value)">Add</button>
+            </ng-container>
+    
+            <ng-container *ngIf="submitted || !inputForm.valid">
+                <button 
+                nbButton 
+                status="primary" 
+                disabled
+                [class.btn-pulse]="submitted">Add</button>
+            </ng-container>
+            
+        </nb-card-footer>
+    </nb-card>
+</div>

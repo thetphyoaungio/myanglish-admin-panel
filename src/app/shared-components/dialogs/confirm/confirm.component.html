@@ -1,0 +1,16 @@
+<div class="dialog-container">
+    <nb-card status="warning">
+        <nb-card-header>
+            {{title}}
+        </nb-card-header>
+
+        <nb-card-body>
+            {{message}}
+        </nb-card-body>
+
+        <nb-card-footer>
+            <button nbButton (click)="cancel()">Cancel</button>
+            <button nbButton status="warning" (click)="ok()">OK</button>
+        </nb-card-footer>
+    </nb-card>
+</div>

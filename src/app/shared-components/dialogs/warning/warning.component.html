@@ -1,0 +1,29 @@
+<div class="dialog-container">
+    <nb-card status="warning">
+        <nb-card-header>
+            {{title}}
+        </nb-card-header>
+
+        <nb-card-body>
+            <div class="description-1">
+                {{data.description1}}
+            </div>
+
+            <div class="description-2">
+                {{data.description2}}
+            </div>
+
+            <div class="description-3">
+                <p *ngFor="let para of data.description3">{{para}}</p>
+            </div>
+
+            <div>
+                {{data.description4}}
+            </div>
+        </nb-card-body>
+
+        <nb-card-footer>
+            <button nbButton status="warning" (click)="ok()">OK</button>
+        </nb-card-footer>
+    </nb-card>
+</div>
